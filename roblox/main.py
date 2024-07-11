@@ -19,15 +19,16 @@ class Group:
     A class to define a group WITHOUT a cookie/token aka (.ROBLOSECURITY)
     ---------
     Arguments
-    ID: The group id of a group.
+    groupID: The group id of a group.
     ---------
     Attributes
     ---------
-    rawGroup: The request as a dict. Assuming the request is valid, it'll have the parameters "description", "created", "hasVerifiedBadge", "id", "name".
+    rawGroup: The request as a dict.
     hasVerifiedBadge: Returns if the group has a verified badge as a boolean.
     groupName: Returns the group's name.
-    rawCreated: Returns the raw data from the request of the user's date created.
-    UserDateCreated: Returns the date created of user.
+    rawCreated: Returns the raw data from the request of the user's group created.
+    UserDateCreated: Returns the date created of group.
+    groupDescription: Returns the description of the group.
     """
 
     def __init__(self, groupID) -> None:
@@ -57,13 +58,14 @@ class Group:
             else:
                 t = response.read().decode("utf-8")
                 self.rawGroup = dict(json.loads(t))["data"]
-              
+        
         self.groupName = self.rawGroup[0]["name"]
         self.groupDescription = self.rawGroup[0]["description"]
         self.groupOwnerId = self.rawGroup[0]["owner"]["id"] if self.rawGroup[0]["owner"] != None else None
         self.groupDateCreated = self.rawGroup[0]["created"][:10]
         self.hasVerifiedBadge = bool(self.rawGroup[0]["hasVerifiedBadge"])
         self.rawCreated = self.rawGroup[0]["created"]
+        self.GroupDateCreated = self.rawGroup["created"][:10]
 
 class Player:
 
@@ -75,7 +77,7 @@ class Player:
     ---------
     Attributes
     ---------
-    rawUser: The request as a dict. Assuming the request is valid, it'll have the parameters "description", "created", "isBanned", "externalAppDisplayName", "hasVerifiedBadge", "id", "name", "displayName".
+    rawUser: The request as a dict.
     isBanned: Returns if the user is banned as a boolean.
     hasVerifiedBadge: Returns if the user has a verified badge as a boolean.
     UserName: Returns the user's username. Not to be confused with "DisplayName"
@@ -102,7 +104,7 @@ class Player:
             else:
                 t = response.read().decode("utf-8")
                 self.rawUser = dict(json.loads(t))
-              
+                
         self.userID = self.rawUser["id"]
         self.isBanned = True if self.rawUser["isBanned"] == "true" else False
         self.hasVerifiedBadge = True if self.rawUser["hasVerifiedBadge"] == "true" else False
@@ -111,4 +113,3 @@ class Player:
         self.Description = self.rawUser["displayName"]
         self.rawUserCreated = self.rawUser["created"]
         self.UserDateCreated = self.rawUser["created"][:10]
-       
